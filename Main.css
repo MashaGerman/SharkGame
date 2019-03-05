@@ -1,0 +1,345 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+html,body{
+    height:100%;
+    width:100%;
+}
+
+body div.mainWrapper {
+    height:100%;
+    width:100%;
+    position: relative;
+    background: url(PNG/Backgrounds/Beach/Preview.png) repeat-x top left;
+    background-color:rgb(49, 116, 143);
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+body .mainWrapper .logo img{
+   padding-top: 20px;
+}
+body .mainWrapper .openingMenu {
+    margin-top: 20px;
+    width: 300px;
+    z-index: 5;
+}
+body span {
+    display: inline-block;
+    height: 76px;
+    width:76px;
+    z-index: 10;
+    border:1px solid rgba(0,0,0,0);
+    border-radius: 50%;
+}
+body .mainWrapper .openingMenu .startGame span.button1 {
+    background-image: url(PNG/UI/Buttons/Green.png);
+    background-position: -76px 0;
+}
+body span.button1:hover, span.fb:hover, span.questions:hover,
+span.button2:hover, span.button3:hover, span.rules:hover {
+    background-color: white;
+    box-shadow: 3px 1px 3px 3px white;
+    transition: 0.2s;
+    cursor: pointer;
+}
+body .mainWrapper .openingMenu .highscore span.button2 {
+    background-image: url(PNG/UI/Buttons/Yellow.png);
+    background-position: -152px -152px;
+}
+body .mainWrapper .openingMenu .settings span.button3 {
+    background-image: url(PNG/UI/Buttons/Yellow.png);
+    background-position: -228px -152px;
+}
+body .startGame, .highscore, .settings {
+    display:flex;
+    flex-direction: row;
+    align-content: center;
+    align-items:center;
+    margin-top: 7px;
+    position: relative;;
+}
+body .menuItem {
+    display: inline-block;
+    background-color: beige;
+    border: 1px solid beige;
+    border-radius: 7px 9px;
+    min-height:40px;
+    min-width: 250px;
+    z-index: 0;
+    text-align: center;
+    font-family: 'Acme', sans-serif;
+    font-size: 26px;
+    padding-top: 5px;
+    color:#8B0000; 
+    position: absolute;
+    top: 15px;
+    left: 65px;
+}
+body .mainWrapper footer {
+    min-width: 80%;
+    max-height: 76px;
+}
+body .FAQ, .rules, .socialNetworks {
+    display: inline-block;
+}
+body .FAQ span.questions {
+    background-image: url(PNG/UI/Buttons/Yellow.png);
+    background-position: -228px -76px;
+}
+body .rules span.rules {
+    background-image: url(PNG/UI/Buttons/Yellow.png);
+    background-position: -304px -76px;
+}
+body .socialNetworks{
+    float: right;
+}
+body .socialNetworks span.fb {
+    background-image: url(PNG/UI/Buttons/DarkBlue.png);
+    background-position: -304px -304px;
+}
+body .mainWrapper .openingMenuFishMove{
+    position:fixed;
+    top:250px;
+    z-index: 3;
+}
+body #divScore{
+    position: absolute;
+    top:20px;
+    z-index: 10;
+}
+body #divScore #applyScore{
+    margin-left: 370px;
+}
+body  .settingsDiv {
+    width:450px;
+    height:520px;
+    background: url('PNG/UI/Settings.png');
+    margin-top: 40px;
+    position:relative;
+}
+body  #divSettings {
+    position: absolute;
+    top:20px;
+    z-index: 10;
+}
+body  #divSettings * {
+    z-index: 15;
+}
+body  .settingsDiv .main{
+    position: absolute;
+    top: 100px;
+    left: 75px;
+    height: 335px;
+    width: 300px;
+    background-color:rgb(245, 245, 245);
+    border:1px solid rgb(245, 245, 245);
+    border-radius:20% 12%;
+    font-family: 'Acme', sans-serif;
+    font-size: 26px;
+    padding-top: 5px;
+    color:#8B0000; 
+    text-align: center;
+    padding-top: 50px;
+}
+body  .settingsDiv .applybars {
+    position:absolute;
+    height:76px;
+    width:100%;
+    bottom:0;
+}
+body .settingsDiv .applybars .apply{
+    background-image: url('PNG/UI/Buttons/Green.png');
+    background-position: 0 -152px;
+    width: 76px;
+    height:76px;
+    display: inline-block;
+    margin-left: 290px;
+    transform: scale(1.1,1.1);
+}
+body .settingsDiv .applybars .close{
+    background-image: url('PNG/UI/Buttons/Red.png');
+    background-position:-76px -152px;
+    width: 76px;
+    height:76px;
+    display: inline-block;
+}
+body .settingsDiv .main *{
+    padding-top:20px;
+}
+body .settingsDiv .applybars .close:hover, .apply:hover{
+    cursor:pointer;
+}
+body {
+    width:100%;
+    height:100%;
+    background-image: url(PNG/Backgrounds/Ocean1/Preview.png);
+    background-repeat:repeat-x;
+    background-color: rgb(139, 126, 57);
+    animation: bg 2s linear infinite;
+    overflow:hidden;
+}
+@keyframes bg{
+from { background-position: -16px 0, 0 0;}
+50%{background-position: 0 0, 0 0;}
+to { background-position: -16px 0, 0 0;}
+}
+body #MainFieldGame {
+    background-image: url(PNG/Backgrounds/Ocean1/layer3.png);
+    background-repeat: repeat-x;
+    background-position-y: 40px;
+}
+body #divResult {
+    position: absolute;
+    top:40px;
+    left: 280px;
+    height: 440px;
+    width:450px;
+    z-index: 10;
+}
+body #divResult .winGame{
+    width:100%;
+    height: 100%;
+    background-image: url(PNG/UI/LevelComplete.png);
+    position: relative;
+}
+body #divResultL {
+    position: absolute;
+    top:40px;
+    left: 280px;
+    height: 440px;
+    width:450px;
+    z-index: 10;
+}
+body #divResultL .loseGame{
+    width:100%;
+    height: 100%;
+    background-image: url(PNG/UI/YouFailed.png);
+    position: relative;
+}
+body #divResultL .main{
+    position: absolute;
+    top: 235px;
+    left: 65px;
+    height: 90px;
+    width: 320px;
+    background-color:rgb(245, 245, 245);
+    border:1px solid rgb(245, 245, 245);
+    border-radius:8%;
+    font-family: 'Acme', sans-serif;
+    font-size: 24px;
+    padding-top: 5px;
+    color:#8B0000; 
+    text-align: center;
+    padding-top:5px;
+}
+body #divResult .main{
+    position: absolute;
+    top: 205px;
+    left: 65px;
+    height: 120px;
+    width: 320px;
+    background-color:rgb(245, 245, 245);
+    border:1px solid rgb(245, 245, 245);
+    border-radius:8%;
+    font-family: 'Acme', sans-serif;
+    font-size: 24px;
+    padding-top: 5px;
+    color:#8B0000; 
+    text-align: center;
+    padding-top:5px;
+}
+body #divResult h3,h5{
+    margin:3px;
+}
+body #divResult .applybars{
+    position:absolute;
+    bottom:20px;
+    height:76px;
+}
+body #divResult .applybars div{
+    height: 76px;
+    width:76px;
+}
+body #divResultL .applybars{
+    position:absolute;
+    bottom:20px;
+    height:76px;
+}
+body #divResultL .applybars div{
+    height: 76px;
+    width:76px;
+}
+body #divResult .applybars #restartButton{
+    background-image: url('PNG/UI/Buttons/Yellow.png');
+    position: absolute;
+    bottom:15px;
+    left:75px;
+}
+body #divResultL .applybars #restartButton{
+    background-image: url('PNG/UI/Buttons/Green.png');
+    position: absolute;
+    bottom:17px;
+    left:185px;
+    transform: scale(1.2,1.2);
+    cursor: pointer;
+}
+body #divResult .applybars #restartButton,#playMore{
+    cursor: pointer;
+}
+body #divResult .applybars #menuButton{
+    background-image: url('PNG/UI/Buttons/Yellow.png');
+    background-position-x: -152px;
+    background-position-y:-76px;
+    position: absolute;
+    bottom:15px;
+    left:298px;
+}
+body #divResultL .applybars #menuButton{
+    background-image: url('PNG/UI/Buttons/Yellow.png');
+    background-position-x: -152px;
+    background-position-y:-76px;
+    position: absolute;
+    bottom:15px;
+    left:298px;
+}
+body #divResult:after {
+    content:"";
+    background-image: url('PNG/Fish/SmallFishYellow.png');
+    width:80px;
+    height:48px;
+    position: absolute;
+    top:237px;
+    left:5px;
+}
+body #divResultL:after {
+    content:"";
+    background-image: url('PNG/Fish/SmallFishYellow.png');
+    width:80px;
+    height:48px;
+    position: absolute;
+    top:265px;
+    left:5px;
+}
+body #divResultL:before {
+    content:"";
+    z-index: 50;
+    background-image: url('PNG/Shark/Shark.png');
+    background-position-x: -512px;
+    background-position-y: -192px;
+    width:256px;
+    height:192px;
+    position: absolute;
+    top:70px;
+    left:100px;
+}
+body #divResult .applybars #playMore{
+    background-image: url('PNG/UI/Buttons/Green.png');
+    background-position-x: -76px;
+    background-position-y:0;
+    position: absolute;
+    bottom:17px;
+    left:185px;
+    transform: scale(1.2,1.2);
+}

@@ -1,0 +1,88 @@
+<!Doctype html>
+    <html>
+        <head>
+            <title>Shark game</title>
+            <meta charset='utf-8'>
+            <META name="viewport" content="width=device-width, initial-scale=1">
+            <link rel='stylesheet' href='Main.css'>
+                <link href='Main.css' rel='stylesheet'>
+                <link href="https://fonts.googleapis.com/css?family=Acme|Pacifico" rel="stylesheet">  
+                <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+                <script src="http://ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
+            </head>
+        <body>
+            <div class='mainWrapper'>
+                <div class='logo'>
+                    <img src='PNG/UI/Logo.png' height=225 width=363>
+                </div>
+                <svg class='openingMenuFishMove' width=100% height=300></svg>
+                <div class='openingMenu'>
+                    <div class='startGame'>
+                        <span class=button1>
+                        </span>
+                        <div class='menuItem'>
+                            <p>START GAME</p>
+                        </div>
+                    </div>
+                    <div class='highscore'>
+                        <span class=button2>
+                        </span>
+                        <div class='menuItem'>
+                            <p>HIGHSCORE</p>
+                        </div>
+                    </div>
+                    <div class='settings'>
+                        <span class=button3>
+                        </span>
+                        <div class='menuItem'>
+                            <p>SETTINGS</p>
+                        </div>
+                    </div>
+                </div>
+                <footer>
+                    <div class='FAQ'>
+                        <span class='questions'>
+
+                        </span>
+                    </div>
+                    <div class='rules'>
+                        <span class='rules'>
+
+                        </span>
+                    </div>
+                    <div class='socialNetworks'>
+                        <span class='fb'>
+
+                        </span>
+                    </div>
+                </footer>
+            </div>
+        </body>
+        <script src='navS.js'></script>
+        <script src='main.js'></script>
+        <script id='settingsTmpl' type='text/x-jquery-tmpl'>
+            <div class='settingsDiv'>
+                    <div class='main'>
+                            <h3>MUSIC</h3>
+                            <input type='range' min=0 max=10 value=4 class='range' id='musicRange'>
+                            <h3>SOUNDS</h3>
+                            <input type='range' min=0 max=10 value=4 class='range' id='soundRange'>
+                    </div>
+                    <div class='applybars'>
+                        <div class='close' id='${closeButton}'></div>
+                        <div class='apply' id='${applyButton}'></div>
+                    </div>
+            </div>
+        </script>
+        <script id='highscoreTmpl' type='text/x-jquery-tmpl'>
+            <div class='settingsDiv highscoreDiv'>
+                    <div class='main'>
+                            <h3>Highscore:</h3>
+                            <h1>${value}</h1>
+                    </div>
+                    <div class='applybars'>
+                        <div class='apply' id='${applyButton}'></div>
+                    </div>
+            </div>
+        </script>
+    </html>

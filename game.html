@@ -1,0 +1,48 @@
+<!Doctype html>
+    <html>
+        <head>
+            <title>Shark game</title>
+            <meta charset='utf-8'>
+            <META name="viewport" content="width=device-width, initial-scale=1">
+            <link rel='stylesheet' href='Main.css'>
+                <link href='Main.css' rel='stylesheet'>
+                <link href="https://fonts.googleapis.com/css?family=Acme|Pacifico" rel="stylesheet">  
+                <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+                <script src="http://ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
+        </head>
+        <body>
+            <canvas id='MainFieldGame' width="1500" height="600" >
+                
+            </canvas>
+            
+            <script src='main.js'></script>
+        </body>
+        <script src='navS.js'></script>
+        <script id='settingsTmpl' type='text/x-jquery-tmpl'>
+            <div class='settingsDiv'>
+                    <div class='main'>
+                            <h3>MUSIC</h3>
+                            <input type='range' min=0 max=10 value=4 class='range' id='musicRange'>
+                            <h3>SOUNDS</h3>
+                            <input type='range' min=0 max=10 value=4 class='range' id='soundRange'>
+                    </div>
+                    <div class='applybars'>
+                        <div class='close' id='${closeButton}'></div>
+                        <div class='apply' id='${applyButton}'></div>
+                    </div>
+            </div>
+        </script>
+        <script id='gameResultTMPL' type='text/x-jquery-tmpl'>
+            <div class='result ${which}'>
+                    <div class='main'>
+                            <h3>YOUR SCORE: ${current}</h3>
+                            <h3>HIGHSCORE: ${highscore}</h3>
+                    </div>
+                    <div class='applybars'>
+                        <div class='close' id='${restart}'></div>
+                        <div class='play' id='${goOn}'></div>
+                        <div class='apply' id='${menu}'></div>
+                    </div>
+            </div>
+        </script>
+    </html>
