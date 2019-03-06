@@ -188,6 +188,9 @@ function drawMines() {
 var redFish=new Image();
 redFish.src='PNG/Fish/SmallFishRed.png';
 redFish.classname='smallFish';
+var redFish2=new Image();
+redFish2.src='PNG/Fish/SmallFishRed.png';
+redFish2.classname='smallFish';
 var yellowFish=new Image();
 yellowFish.src='PNG/Fish/SmallFishYellow.png';
 yellowFish.classname='smallFish';
@@ -197,13 +200,33 @@ greenFish.classname='smallFish';
 var smallFishW=40;
 var smallFishH=24;
 var posXredFish=-10;
+var posXredFish2=-70;
 var posXyellowFish=-100;
 var posXgreenFish=-40;
 var posYredFish=randomY();
+var posYredFish2=randomY();
 var posYyellowFish=randomY();
 var posYgreenFish=randomY();
 
 
+function drawRedFish2(){
+    context.drawImage(redFish2, 0, 0, 80,48,posXredFish2,posYredFish2,smallFishW,smallFishH);
+    posXredFish2+=8;
+    if(posXredFish2>document.body.clientWidth){
+        posXredFish2=-10;
+        if(posYredFish2>100){ 
+            posYredFish2-=40;
+        }else if(posXredFish2<document.body.clientHeight-150){
+            posYredFish2+=15;
+        }
+    }else if((posXredFish2<sharkPoint.xR+10)&&(posXredFish2+smallFishW-30>sharkPoint.xL+20)&&(posYredFish2<sharkPoint.yB-10)&&(posYredFish2+smallFishH>sharkPoint.yT+10)){
+            posXredFish2-=1000;
+            posYredFish2=randomY();
+            nowScore+=100;
+            sharkEat=true;
+            playGulp();
+        }
+}
 function drawRedFish1(){
     context.drawImage(redFish, 0, 0, 80,48,posXredFish,posYredFish,smallFishW,smallFishH);
     posXredFish+=5;
@@ -302,12 +325,14 @@ var updateCNV=setInterval(function(){
     drawShark(); 
     drawGreenFish1();
     drawRedFish1();
+    drawRedFish2();
     drawYellowFish1();
     drawPurpleFish1();
     drawUI();
     drawScore();
     checkScore();
     checkLives();
+    handleInput();
     },40);
 function clearAll(){
     context.clearRect(0, 0, cnv.width, cnv.height);
@@ -315,7 +340,33 @@ function clearAll(){
 function randomY(){
     return 100+Math.floor(Math.random()*(document.body.clientHeight-200+1));
 }
-    addEventListener('keydown',function(e){
+function handleInput() {
+    if((input.isDown('DOWN'))&&(posYshark<(cnv.height-sharkH))){
+            posYshark+=5;
+        }else if(input.isDown('DOWN')){
+            posYshark=cnv.height-sharkH;
+        }
+    if((input.isDown('UP'))&&(posYshark>5)){
+            posYshark-=5;
+        }else if(input.isDown('UP')){
+            posYshark=0;
+        }
+    if((input.isDown('LEFT'))&&(posXshark>5)){
+            posXshark-=5;
+            shark.src='PNG/Shark/sharkLeft.png';
+            moveLeft=true;
+        }else if(input.isDown('LEFT')){
+            posXshark=0;
+        }
+    if((input.isDown('RIGHT'))&&(posXshark<(document.body.clientWidth-sharkW))) {
+            posXshark+=5;
+            shark.src='PNG/Shark/Shark.png';
+            moveleft=false;
+            }else if(input.isDown('RIGHT')){
+                document.body.clientWidth-sharkW;
+            }
+}
+/*addEventListener('keydown',function(e){
         switch(e.keyCode){
             case 37:
                 if(posXshark>5) {
@@ -350,7 +401,7 @@ function randomY(){
                 }
             break;
         }
-    });
+    });*/
                 cnv.addEventListener('click',function(e){
                     if(e.which==1){
                         if((e.pageX>20)&&(e.pageX<58)&&(e.pageY>76)&&(e.pageY<114)){
@@ -377,19 +428,6 @@ function randomY(){
             iLose();
         }
     }
-}
-function updateVolumeM(){
-    bulk.volume=localStorage.getItem('soundVolume')||0.4;
-}
-function updateVolumeG(){
-    gulp.volume=localStorage.getItem('soundVolume')||0.4;
-    explosion.volume=localStorage.getItem('soundVolume')||0.4;
-    fishSound.volume=localStorage.getItem('soundVolume')||0.4;
-    backAudio.volume=localStorage.getItem('musicVolume')||0.2;
-    bulk.volume=localStorage.getItem('soundVolume')||0.4;
-}
-
-
 function iWin (){
     var divR=document.getElementById('divResult');
     if(divR){
@@ -412,24 +450,24 @@ function iWin (){
         }
     }
     bulk();
-var restartGame=document.getElementById('restartButton');
-restartGame.addEventListener('click',function(e){
-    location.hash='';
-    location.hash = "game";
-    bulk();
-});
-var goMenu=document.getElementById('menuButton');
-goMenu.addEventListener('click',function(e){
-    e.preventDefault();
-    location.hash = "index";
-    bulk();
-});
-var playMore=document.getElementById('playMore');
-playMore.addEventListener('click',function(e){
-    alert('No levels available');
-    location.hash = "index";
-    bulk();
-});
+    var restartGame=document.getElementById('restartButton');
+    restartGame.addEventListener('click',function(e){
+        location.hash='';
+        location.hash = "game";
+        bulk();
+    });
+    var goMenu=document.getElementById('menuButton');
+    goMenu.addEventListener('click',function(e){
+        e.preventDefault();
+        location.hash = "index";
+        bulk();
+    });
+    var playMore=document.getElementById('playMore');
+    playMore.addEventListener('click',function(e){
+        alert('No levels available');
+        location.hash = "index";
+        bulk();
+    });
 }
 function iLose(){
     var divL=document.getElementById('divResult');
@@ -446,17 +484,17 @@ function iLose(){
         document.body.appendChild(divL);
     }
     bulk();
-var restartGame=document.getElementById('restartButton');
-restartGame.addEventListener('click',function(e){
-    location.hash='';
-    location.hash = "game";
-    bulk();
-});
-var goMenu=document.getElementById('menuButton');
-goMenu.addEventListener('click',function(e){
-    e.preventDefault();
-    location.hash = "index";
-    bulk();
-});
-
+    var restartGame=document.getElementById('restartButton');
+    restartGame.addEventListener('click',function(e){
+        location.hash='';
+        location.hash = "game";
+        bulk();
+    });
+    var goMenu=document.getElementById('menuButton');
+    goMenu.addEventListener('click',function(e){
+        e.preventDefault();
+        location.hash = "index";
+        bulk();
+    });
+}
 }

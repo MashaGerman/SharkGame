@@ -150,6 +150,16 @@ function changeVolume(){
     });
     
 }
+function updateVolumeM(){
+    bulk.volume=localStorage.getItem('soundVolume')||0.4;
+}
+function updateVolumeG(){
+    gulp.volume=localStorage.getItem('soundVolume')||0.4;
+    explosion.volume=localStorage.getItem('soundVolume')||0.4;
+    fishSound.volume=localStorage.getItem('soundVolume')||0.4;
+    backAudio.volume=localStorage.getItem('musicVolume')||0.2;
+    bulk.volume=localStorage.getItem('soundVolume')||0.4;
+}
 function bulk(){
     var sound=new Audio;
     sound.src='sounds/bulk.mp3';
