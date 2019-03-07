@@ -1,3 +1,11 @@
+var requestAnimationFrame= window.requestAnimationFrame ||
+                        window.mozRequestAnimationFrame ||
+                        window.webkitRequestAnimationFrame ||
+                        window.msRequestAnimationFrame;
+
+
+
+
 var backAudio=new Audio;
 backAudio.src='sounds/Fon.mp3';
 backAudio.autoplay=true; 
@@ -124,7 +132,7 @@ var posXstar2=posXstar1+60;
 const posYstar2=490;
 function drawStar(){
     context.drawImage(star1, 0, 0, 84,84,posXstar1,posYstar1,starSize,starSize);
-    context.drawImage(star2, 0, 0, 84,84,posXstar2,posYstar2,starSize,starSize);  
+    context.drawImage(star2, 0, 0, 84,84,posXstar2,posYstar2,starSize,starSize); 
 }
 //eat green star NOT WORK
 if((posXstar1<sharkPoint.xR+10)&&(posXstar1+starSize-10>sharkPoint.xL)&&(posYstar1<sharkPoint.yB-10)&&(posYstar1+starSize>sharkPoint.yT+10)){
@@ -211,7 +219,7 @@ var posYgreenFish=randomY();
 
 function drawRedFish2(){
     context.drawImage(redFish2, 0, 0, 80,48,posXredFish2,posYredFish2,smallFishW,smallFishH);
-    posXredFish2+=8;
+    posXredFish2+=2;
     if(posXredFish2>document.body.clientWidth){
         posXredFish2=-10;
         if(posYredFish2>100){ 
@@ -229,7 +237,7 @@ function drawRedFish2(){
 }
 function drawRedFish1(){
     context.drawImage(redFish, 0, 0, 80,48,posXredFish,posYredFish,smallFishW,smallFishH);
-    posXredFish+=5;
+    posXredFish+=1;
     if(posXredFish>document.body.clientWidth){
         posXredFish=-10;
         if(posYredFish>100){ 
@@ -267,7 +275,7 @@ function drawYellowFish1(){
 }
 function drawGreenFish1(){
     context.drawImage(greenFish, 0, 0, 80,48,posXgreenFish,posYgreenFish,smallFishW,smallFishH);
-    posXgreenFish+=3;
+    posXgreenFish+=1;
     if(posXgreenFish>document.body.clientWidth){
         posXgreenFish=-10;
         randomY();
@@ -295,7 +303,7 @@ var posXbigPurpleFish=document.body.clientWidth+110;
 var posYbigPurpleFish=Math.floor( Math.random()*((document.body.clientHeight-150)+1));
 function drawPurpleFish1(){
     context.drawImage(bigPurpleFish, 0, 0, 144,104,posXbigPurpleFish,posYbigPurpleFish,72,52);
-    posXbigPurpleFish-=7;
+    posXbigPurpleFish-=3;
     if(posXbigPurpleFish<-300){
         posXbigPurpleFish=document.body.clientWidth+180;
         if(posYbigPurpleFish<100){ 
@@ -318,7 +326,10 @@ fishSound.autoplay=true;
 fishSound.loop=true;
 fishSound.volume=localStorage.getItem('soundVolume')||0.4;
 //redraw canvas
-var updateCNV=setInterval(function(){
+animate(function(timePassed) {
+    updateGame();
+  },300000);
+function updateGame(){
     clearAll();
     drawStar();
     drawMines();
@@ -333,7 +344,7 @@ var updateCNV=setInterval(function(){
     checkScore();
     checkLives();
     handleInput();
-    },40);
+}
 function clearAll(){
     context.clearRect(0, 0, cnv.width, cnv.height);
 }
@@ -342,66 +353,30 @@ function randomY(){
 }
 function handleInput() {
     if((input.isDown('DOWN'))&&(posYshark<(cnv.height-sharkH))){
-            posYshark+=5;
+            posYshark+=2; 
         }else if(input.isDown('DOWN')){
             posYshark=cnv.height-sharkH;
         }
     if((input.isDown('UP'))&&(posYshark>5)){
-            posYshark-=5;
+            posYshark-=2;
         }else if(input.isDown('UP')){
             posYshark=0;
         }
     if((input.isDown('LEFT'))&&(posXshark>5)){
-            posXshark-=5;
+            posXshark-=2;
             shark.src='PNG/Shark/sharkLeft.png';
             moveLeft=true;
         }else if(input.isDown('LEFT')){
             posXshark=0;
         }
     if((input.isDown('RIGHT'))&&(posXshark<(document.body.clientWidth-sharkW))) {
-            posXshark+=5;
+            posXshark+=2;
             shark.src='PNG/Shark/Shark.png';
             moveleft=false;
             }else if(input.isDown('RIGHT')){
                 document.body.clientWidth-sharkW;
             }
 }
-/*addEventListener('keydown',function(e){
-        switch(e.keyCode){
-            case 37:
-                if(posXshark>5) {
-                    posXshark-=5;
-                    shark.src='PNG/Shark/sharkLeft.png';
-                    moveLeft=true;
-                }else{
-                    posXshark=0;
-                }
-            break;
-            case 38:
-                if(posYshark>5) {
-                    posYshark-=5;
-                }else{
-                    posYshark=0;
-                }
-            break;
-            case 39:
-                if(posXshark<(document.body.clientWidth-sharkW)) {
-                posXshark+=5;
-                shark.src='PNG/Shark/Shark.png';
-                moveleft=false;
-                }else{
-                    document.body.clientWidth-sharkW;
-                }
-            break;
-            case 40:
-                if(posYshark<(cnv.height-sharkH)) {
-                    posYshark+=5;
-                }else{
-                    posYshark=cnv.height-sharkH;
-                }
-            break;
-        }
-    });*/
                 cnv.addEventListener('click',function(e){
                     if(e.which==1){
                         if((e.pageX>20)&&(e.pageX<58)&&(e.pageY>76)&&(e.pageY<114)){
@@ -497,4 +472,18 @@ function iLose(){
         bulk();
     });
 }
+function animate(draw, duration) {
+    var start = performance.now();
+    requestAnimationFrame(function animate(time) {
+      var timePassed = time - start;
+      if (timePassed > duration) {
+          timePassed = duration;
+          iLose();
+      }
+      draw(timePassed);
+      if (timePassed < duration) {
+        requestAnimationFrame(animate);
+      }
+    });
+  }
 }
