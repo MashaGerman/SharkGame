@@ -145,7 +145,7 @@ function changeVolume(){
     applySet.addEventListener('click', function(){
         var win=document.getElementById('divSettings');
         parent.style.display='none';
-            try {updateVolumeG();}catch{updateVolumeM();}
+            try {updateVolumeG();}catch(err){updateVolumeM();}
         bulk();
     });
     
