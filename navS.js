@@ -12,6 +12,16 @@ var settingsButton=document.getElementsByClassName('settings')[0];
             settingsButton.addEventListener('click', goSettings);
         }
 }
+function updateVolumeM(){
+    bulk.volume=localStorage.getItem('soundVolume')||0.4;
+}
+function updateVolumeG(){
+    gulp.volume=localStorage.getItem('soundVolume')||0.4;
+    explosion.volume=localStorage.getItem('soundVolume')||0.4;
+    fishSound.volume=localStorage.getItem('soundVolume')||0.4;
+    backAudio.volume=localStorage.getItem('musicVolume')||0.2;
+    bulk.volume=localStorage.getItem('soundVolume')||0.4;
+}
 mainMenuButtons();
 function goScore(e){
         e.preventDefault();
@@ -145,20 +155,10 @@ function changeVolume(){
     applySet.addEventListener('click', function(){
         var win=document.getElementById('divSettings');
         parent.style.display='none';
-            try {updateVolumeG();}catch(err){updateVolumeM();}
+            try {updateVolumeG();}catch{updateVolumeM();}
         bulk();
     });
     
-}
-function updateVolumeM(){
-    bulk.volume=localStorage.getItem('soundVolume')||0.4;
-}
-function updateVolumeG(){
-    gulp.volume=localStorage.getItem('soundVolume')||0.4;
-    explosion.volume=localStorage.getItem('soundVolume')||0.4;
-    fishSound.volume=localStorage.getItem('soundVolume')||0.4;
-    backAudio.volume=localStorage.getItem('musicVolume')||0.2;
-    bulk.volume=localStorage.getItem('soundVolume')||0.4;
 }
 function bulk(){
     var sound=new Audio;
