@@ -130,6 +130,7 @@ function dataShowNewPage(data){
 }
 function dataLoadGame (data) {
     document.body.innerHTML = data;
+    getReady();
     playMyGame();
 }
 function changeVolume(){

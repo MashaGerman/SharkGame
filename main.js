@@ -9,8 +9,16 @@ var explosion;
 var fishSound;
 var nowScore;
 var Shark;
+var SharkLives;
 var stop=false;
 var anim;
+var shiftExp=0;
+function getReady(){
+nowScore=0;
+SharkLives=3;
+stop=false;
+
+}
 function playMyGame(){
         if(!('highscore' in localStorage)){
             localStorage.setItem('highscore',0);
@@ -46,7 +54,7 @@ function playMyGame(){
         }
         var eatCount=12;
         var timesS=10;  
-        var SharkLives=3; 
+        SharkLives=3; 
         function drawShark(){
             var posImg=sharkX;
             sharkPoint.xL=posXshark;
@@ -60,10 +68,16 @@ function playMyGame(){
                     context.drawImage(shark, 512, 192, 256,192,posXshark,posYshark,128,96);
                 }
                 timesS--;
+
                 if(timesS==0){
                     SharkLives--;
+                    console.log('drawShark-life');
                 }else if(timesS<0){
                     sharkDead=false;
+                    console.log('sharkDead=false');
+                    timesS=10;
+                    console.log('reload count');
+                    return false;
                 }
             }else if(sharkEat){
                 if(moveLeft){
@@ -131,22 +145,20 @@ function playMyGame(){
                 context.drawImage(star2, 0, 0, 84,84,posXstar2,posYstar2,starSize,starSize); 
             }
             
-            //eat green star NOT WORK
+            //eat green star
             if((sharkPoint.yT+10<posYstar1+starSize)&&(sharkPoint.yB-10>posYstar1)&&(sharkPoint.xL<posXstar1+starSize)&&(sharkPoint.xR>posXstar1)){
-                console.log('star');
                 star1=null;
                 posXstar1=-10000;
                 nowScore+=100;
                 sharkEat=true;
                 playGulp();
             }
-            //eat red star NOT WORK
+            //eat red star
             if((sharkPoint.yT+10<posYstar2+starSize)&&(sharkPoint.yB-10>posYstar2)&&(sharkPoint.xL<posXstar2+starSize)&&(sharkPoint.xR>posXstar2)){
                 star2=null;
                 sharkEat=true;
                 posXstar2=-10000;
                 playGulp();
-                console.log('star');
                 nowScore+=100;
             }
         }
@@ -162,11 +174,12 @@ function playMyGame(){
         var ifBombExplode=false;
         var posXexplosion=0;
         function bombExplode(){
+            bomb=null;
             var explosion=new Image();
             explosion.src='PNG/Effects/Explosion.png';
             context.drawImage(explosion, posXexplosion, 0, 64,64,bombX,382,64,64);
             posXexplosion+=64;
-            bomb=null;
+            
             if(posXexplosion>512){
                 explosion=null;
                 bombX=-100;
@@ -326,6 +339,109 @@ function playMyGame(){
         }
 
         //draw submarine
+        var submarine=new Image();
+        var subm={
+            height:112,
+            width:128
+        }
+        var posXsubmarine=document.body.clientWidth+1210;
+        var posXstable=document.body.clientWidth*3/4;
+        var posYsubmarine=220;
+        var torpedo={
+            height:24,
+            width:52
+        }
+        submarine.src='PNG/Enemy/SubmarineYellow.png';
+        var torpedo1=new Image();
+        torpedo1.src='PNG/Enemy/Torpedo.png';
+        var torpedo2=new Image();
+        torpedo2.src='PNG/Enemy/Torpedo.png';
+        var torpedo3=new Image();
+        torpedo3.src='PNG/Enemy/Torpedo.png';
+        var posXtorpedo=posXstable+50;
+        var posYtorpedo=330;
+        var torpExplode=false;
+        function drawSubmarine(){
+            
+            if((torpedo1)||(torpedo2)||(torpedo3)){
+                if(posXsubmarine>posXstable){
+                posXsubmarine-=2;
+                }else{
+                posXsubmarine=posXstable;
+                    if(torpedo1){
+                        context.drawImage(torpedo1, 0, 0, torpedo.width*2,torpedo.height*2,posXtorpedo,posYtorpedo,torpedo.width,torpedo.height);
+                            posXtorpedo-=5;
+                            checkTorp();
+                                if(torpExplode){
+                                    sharkDead=true;
+                                    explode();
+                                    console.log('tirp 1 -life');
+                                    explodeTorpedo(torpedo1);
+                                    torpedo1=null;
+                                }
+                            if(posXtorpedo<-170){
+                                torpedo1=null;
+                                posXtorpedo=posXstable+50;
+                            }
+                    }else if(torpedo2){
+                        context.drawImage(torpedo2, 0, 48, torpedo.width*2,torpedo.height*2,posXtorpedo,posYtorpedo,torpedo.width,torpedo.height);
+                            posXtorpedo-=5;
+                            checkTorp();
+                            if(torpExplode){
+                                    sharkDead=true;
+                                    console.log('tirp 2 -life');
+                                    explode();
+                                    explodeTorpedo(torpedo2);
+                                    torpedo2=null;
+                                }
+                                if(posXtorpedo<-170){
+                                torpedo2=null;
+                                posXtorpedo=posXstable+50;
+                            }
+                    }else if(torpedo3){
+                        context.drawImage(torpedo3, 0, 96, torpedo.width*2,torpedo.height*2,posXtorpedo,posYtorpedo,torpedo.width,torpedo.height);
+                            posXtorpedo-=5;
+                            checkTorp();
+                            if(torpExplode){
+                                    sharkDead=true;
+                                    console.log('tirp 3 -life');
+                                    explode();
+                                    explodeTorpedo(torpedo3);
+                                    torpedo3=null;
+                            }
+                            if(posXtorpedo<-170){
+                            torpedo3=null;
+                            }
+                    } 
+                }
+            }else{
+                    posXsubmarine-=2;
+                }
+            context.drawImage(submarine, 0, 0, subm.width*2,subm.height*2,posXsubmarine,posYsubmarine,subm.height,subm.width);
+            
+        }
+        function checkTorp(){
+            if((sharkPoint.xL<(posXtorpedo+torpedo.width))&&(sharkPoint.xR-40>posXtorpedo)&&(sharkPoint.yT<(posYtorpedo+torpedo.height))&&(sharkPoint.yB>posYtorpedo)){
+                torpExplode=true;
+                console.log('i caught');
+            }
+        }
+        function explodeTorpedo(item){
+            item=null;
+            posXexpTorpedo=posXtorpedo+15;
+            var explosion=new Image();
+            explosion.src='PNG/Effects/Explosion.png';
+            context.drawImage(explosion, shiftExp, 0, 64,64,posXexpTorpedo,posYtorpedo-15,64,64);
+            posXexpTorpedo+=64;
+            if(shiftExp>512){
+                explosion=null;
+                shift=0;
+            }
+            if((torpedo1)||(torpedo2)||(torpedo3)){
+                posXtorpedo=posXstable+50;
+                torpExplode=false;
+            }
+        }
 
         fishSound=new Audio;
         fishSound.src='sounds/fishMove.mp3';
@@ -343,6 +459,7 @@ function playMyGame(){
             drawStar();
             drawMines();
             drawShark(); 
+            drawSubmarine();
             drawGreenFish1();
             drawRedFish1();
             drawRedFish2();
@@ -397,7 +514,6 @@ function playMyGame(){
                                     explosion.pause();
                                     fishSound.pause();
                                     backAudio.pause();
-                                    var t=clearInterval(updateCNV);
                                     goMenu(e);
                                 }
                             }
@@ -414,9 +530,11 @@ function playMyGame(){
                 if(SharkLives<1){
                     stop=true;
                     cancelAnimationFrame(anim);
-                    
                     console.log('stop by checkLives');
                     iLose();
+                    SharkLives=3; 
+                    timesS=10;
+                    sharkDead=false;
                 }
             }
         function iWin (){
@@ -443,8 +561,12 @@ function playMyGame(){
             bulk();
             var restartGame=document.getElementById('restartButton');
             restartGame.addEventListener('click',function(e){
+                SharkLives=3;
+                sharkDead=false;
+                timesS=10;
                 location.hash='';
                 location.hash = "game";
+                console.log(SharkLives);
                 bulk();
             });
             var goMenu=document.getElementById('menuButton');
@@ -477,8 +599,12 @@ function playMyGame(){
             bulk();
             var restartGame=document.getElementById('restartButton');
             restartGame.addEventListener('click',function(e){
+                SharkLives=3;
+                sharkDead=false;
+                timesS=10;
                 location.hash='';
                 location.hash = "game";
+                console.log(SharkLives);
                 bulk();
             });
             var goMenu=document.getElementById('menuButton');
@@ -487,27 +613,26 @@ function playMyGame(){
                 location.hash = "index";
                 bulk();
             });
-}
-
-}
-function animate(draw, duration) {
-    if (!stop){
-        var start = performance.now();
-        anim=requestAnimationFrame(function animate(time) {
-        var timePassed = time - start;
-        if (timePassed > duration) {
-            timePassed = duration;
-            stop=true;
             
-            console.log('stop by duration');
-            iLose();
-            cancelAnimationFrame(anim);
-        }
-        draw(timePassed);
-        if (timePassed < duration) {
-            anim=requestAnimationFrame(animate);
-        }
-        });
     }
-    
+            function animate(draw, duration) {
+                if (!stop){
+                    var start = performance.now();
+                    anim=requestAnimationFrame(function animate(time) {
+                    var timePassed = time - start;
+                    if (timePassed > duration) {
+                        timePassed = duration;
+                        stop=true;
+                        console.log('stop by duration');
+                        iLose();
+                        cancelAnimationFrame(anim);
+                    }
+                    draw(timePassed);
+                    if (timePassed < duration) {
+                        anim=requestAnimationFrame(animate);
+                    }
+                    });
+                }
+                
+            }
 }
