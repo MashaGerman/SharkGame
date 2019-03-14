@@ -1,3 +1,4 @@
+
 function mainMenuButtons(){
 var startGameButton=document.getElementsByClassName('startGame')[0];
 var highscoreButton=document.getElementsByClassName('highscore')[0];
@@ -16,8 +17,8 @@ function updateVolumeM(){
     bulk.volume=localStorage.getItem('soundVolume')||0.4;
 }
 function updateVolumeG(){
-    gulp.volume=localStorage.getItem('soundVolume')||0.4;
-    explosion.volume=localStorage.getItem('soundVolume')||0.4;
+    model.gulp.volume=localStorage.getItem('soundVolume')||0.4;
+    model.explosion.volume=localStorage.getItem('soundVolume')||0.4;
     fishSound.volume=localStorage.getItem('soundVolume')||0.4;
     backAudio.volume=localStorage.getItem('musicVolume')||0.2;
     bulk.volume=localStorage.getItem('soundVolume')||0.4;
@@ -54,6 +55,7 @@ function goMenu(e){
     }
 function goPlay(e){
         e.preventDefault();
+        backgroundMusic=null;
         location.hash = "game";
         bulk();
     }
@@ -130,8 +132,16 @@ function dataShowNewPage(data){
 }
 function dataLoadGame (data) {
     document.body.innerHTML = data;
-    getReady();
-    playMyGame();
+    var s=document.createElement('script');
+    s.setAttribute('src','lib.js');
+    document.body.appendChild(s);
+    s.onload=function(){
+        var t=document.createElement('script');
+        t.setAttribute('src','main.js');
+        document.body.appendChild(t);
+    }
+    
+    
 }
 function changeVolume(){
     var parent=document.getElementById('divSettings');
@@ -154,7 +164,7 @@ function changeVolume(){
     });
     var applySet=document.getElementById('applySettings');
     applySet.addEventListener('click', function(){
-        var win=document.getElementById('divSettings');
+        var parent=document.getElementById('divSettings');
         parent.style.display='none';
             try {updateVolumeG();}catch{updateVolumeM();}
         bulk();
@@ -167,3 +177,15 @@ function bulk(){
     sound.autoplay=true;
     sound.loop=false;
 }
+var backAudio=new Audio;
+backAudio.src='sounds/Fon.mp3';
+backAudio.autoplay=true; 
+backAudio.loop=true;
+backAudio.volume=localStorage.getItem('musicVolume')||0.4;
+
+fishSound=new Audio;
+fishSound.src='sounds/fishMove.mp3';
+fishSound.autoplay=true;
+fishSound.loop=true;
+fishSound.volume=localStorage.getItem('soundVolume')||0.4;
+        
