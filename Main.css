@@ -271,13 +271,13 @@ body #divResultL .applybars div{
     height: 76px;
     width:76px;
 }
-body #divResult .applybars #restartButton{
+body #divResult .applybars #restartButton,#restartButtonL{
     background-image: url('PNG/UI/Buttons/Yellow.png');
     position: absolute;
     bottom:15px;
     left:75px;
 }
-body #divResultL .applybars #restartButton{
+body #divResultL .applybars #restartButton,#restartButtonL{
     background-image: url('PNG/UI/Buttons/Green.png');
     position: absolute;
     bottom:17px;
@@ -285,7 +285,7 @@ body #divResultL .applybars #restartButton{
     transform: scale(1.2,1.2);
     cursor: pointer;
 }
-body #divResult .applybars #restartButton,#playMore{
+body #divResult .applybars #restartButton,#restartButtonL,#playMore{
     cursor: pointer;
 }
 body #divResult .applybars #menuButton{

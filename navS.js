@@ -1,4 +1,4 @@
-
+var play=false;
 function mainMenuButtons(){
 var startGameButton=document.getElementsByClassName('startGame')[0];
 var highscoreButton=document.getElementsByClassName('highscore')[0];
@@ -51,6 +51,7 @@ function goScore(e){
 function goMenu(e){
         e.preventDefault();
         location.hash = "index";
+    
         bulk();
     }
 function goPlay(e){
@@ -70,7 +71,6 @@ function goSettings(e){
             var parent=document.getElementsByClassName('mainWrapper')[0];
             if(parent){
                 parent.appendChild(div);
-                
             }else{
                 document.body.appendChild(div);
                 div.style.left=50+'px';
@@ -95,7 +95,6 @@ if(!'soundVolume' in localStorage){
 window.onhashchange = loadNewPage;
 function loadNewPage () {
 	var hash = location.hash.substr(1);
-	//console.log(hash);
 	if (hash == "") {
 		hash = "index";
     }
@@ -132,16 +131,16 @@ function dataShowNewPage(data){
 }
 function dataLoadGame (data) {
     document.body.innerHTML = data;
-    var s=document.createElement('script');
-    s.setAttribute('src','lib.js');
-    document.body.appendChild(s);
-    s.onload=function(){
-        var t=document.createElement('script');
-        t.setAttribute('src','main.js');
-        document.body.appendChild(t);
-    }
-    
-    
+        var s=document.createElement('script');
+        s.setAttribute('src','lib.js');
+        s.setAttribute('id','script1');
+        document.body.appendChild(s);
+        s.onload=function(){
+            var t=document.createElement('script');
+            t.setAttribute('src','main.js');
+            t.setAttribute('id','script2');
+            document.body.appendChild(t);
+        }
 }
 function changeVolume(){
     var parent=document.getElementById('divSettings');
@@ -183,7 +182,7 @@ backAudio.autoplay=true;
 backAudio.loop=true;
 backAudio.volume=localStorage.getItem('musicVolume')||0.4;
 
-fishSound=new Audio;
+var fishSound=new Audio;
 fishSound.src='sounds/fishMove.mp3';
 fishSound.autoplay=true;
 fishSound.loop=true;

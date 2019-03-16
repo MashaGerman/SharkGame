@@ -2,11 +2,13 @@
 function randomY(){
     return 100+Math.floor(Math.random()*(document.body.clientHeight-200+1));
 }
+var model;
 function playMyGame(){
         if(!('highscore' in localStorage)){
             localStorage.setItem('highscore',0);
         }
-        var model=new ModelGame();
+        model=new ModelGame();
+        model.stop=false;
         var view=new ViewGame();
         var controller=new ControllerGame();
         var anim;
@@ -14,16 +16,23 @@ function playMyGame(){
         model.start(view);
         view.start(model,container);
         controller.start(model,container);
-        animate(function(timePassed){
-            if(!model.stop){
-                controller.handleInput();
-                model.updateView();
-                controller.check();
-            }else{
-                cancelAnimationFrame(anim);
-            }
-        },30000);
-    
+        animC=animate(function(timePassed){
+            if(model){
+                    var t=model.getState();
+                if(!t){
+                    controller.handleInput();
+                    model.updateView();
+                    controller.check();
+                /*}else{
+                    cancelAnimationFrame(anim);
+                    model=0;
+                    console.log('cancel');
+                    return;*/
+                }
+            }else return;
+            
+        },30000000);
+        
         function animate(draw, duration) {
                 if (!model.stop){
                     var start = performance.now();
@@ -38,6 +47,7 @@ function playMyGame(){
                             }
                             
                             cancelAnimationFrame(anim);
+                            return;
                         }
                         draw(timePassed);
                         if (timePassed < duration) {
@@ -162,8 +172,3 @@ var cnv=document.getElementById('MainFieldGame');
         });
     }
 playMyGame();
-/*var backAudio=new Audio;
-backAudio.src='sounds/Fon.mp3';
-backAudio.autoplay=true; 
-backAudio.loop=true;
-backAudio.volume=localStorage.getItem('musicVolume')||0.4;*/

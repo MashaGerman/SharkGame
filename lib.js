@@ -1,6 +1,6 @@
-
-// здесь все картинки, чтобы к моменту старта были готовы
-        var pics={
+var divR=null;
+var divL=null;
+var pics={
             sharkLeft: 'PNG/Shark/SharkLeft.png',
             sharkRight: 'PNG/Shark/Shark.png',
             explosion: 'PNG/Effects/Explosion.png',
@@ -18,7 +18,8 @@
             heart: 'PNG/Items/Hearth.png',
             menu: 'PNG/UI/Buttons/Yellow.png'
         }
-
+var animC=null;
+var tempL=null;
         function UserElements(){
             this.settings=new Image();
             this.settings.src=pics.menu;
@@ -30,6 +31,7 @@
             this.highscore=localStorage.getItem('highscore');
             this.scorePosX=document.body.clientWidth-150;
         };
+
         var itemOptions=[
             {
                 type: 'shark',
@@ -169,11 +171,38 @@
             {
                 type: 'submarine',
                 src: [pics.submarine],
-                x:document.body.clientWidth+110,
+                x: document.body.clientWidth+1100,
                 y: 220,
                 speed: null,
                 w: 128,
                 h:112
+            },
+            {
+                type: 'torpedo',
+                src: [pics.torpedo],
+                x:document.body.clientWidth+1160,
+                y:315,
+                speed: 0,
+                w: 52,
+                h:72
+            },
+            {
+                type: 'torpedo',
+                src: [pics.torpedo],
+                x:document.body.clientWidth+1160,
+                y: 315,
+                speed: 48,
+                w: 52,
+                h:72
+            },
+            {
+                type: 'torpedo',
+                src: [pics.torpedo],
+                x:document.body.clientWidth+1160,
+                y: 315,
+                speed: 96,
+                w: 52,
+                h:72
             },
             {
                 type: 'explosion',
@@ -252,7 +281,6 @@
                                 }
                             }else if(_that.eat){
                                 eatCount--;
-                                //sounds[1].autoplay=false;
                                 if(eatCount==0){
                                     _that.eat=false;
                                     eatCount=10;
@@ -303,10 +331,6 @@
                     }
                 }
                 break;
-                case 'star':
-                break;
-                case 'chain':
-                break;
                 case 'explosion':
                     this.sprite=-64;
                     this.explode=function(x,y){
@@ -315,8 +339,6 @@
                             _that.posY=y-32;
                             _that.speed--;
                         }
-                        
-                        
                     }
                     this.getSprite=function(){
                         _that.sprite+=64;
@@ -325,15 +347,27 @@
                     
                 break;
                 case 'submarine':
-                    this.posXstable=document.body.clientWidth*3/4;
+                    this.stop=false; 
+                    this.posXstable=500;
                     this.go=function(){
-                        if(_this.posX>_this.posXstable){
-                        _this.posX-=2;}else{
-                        _this.posX=_this.posXstable;
-                        }
-                    };
-                    this.goOn=function(){
-                        _this.posX-=2;
+                        _that.posX-=3;
+                    }
+                    this.getX=function(){
+                        return _that.posX;
+                    }
+                    this.before=true;
+                break;
+                case 'torpedo':
+                    //this.stop = false;
+                    this.go=function(){
+                        _that.posX-=3;
+                    }
+                    this.run=function(){
+                        _that.posX-=6;
+                    }
+                    this.get=function(){
+                        return {x: _that.posX, y: _that.speed};
+                        
                     }
                 break;
             }
@@ -343,6 +377,9 @@
             var _this=this;
             var myView=null;
             this.stop=false;
+            this.getState=function(){
+                return _this.stop;
+            }
             //static
             this.elements=new UserElements();
             this.players=[];
@@ -365,9 +402,6 @@
             this.setLife=function(m){
                 let shark=_this.players[0];
                 shark.lives+=m;
-                if (shark.lives==0){
-                    _this.stop=true;
-                }
             }
             this.getLife=function(){
                 return _this.players[0]['lives'];
@@ -388,7 +422,7 @@
                 var sharkY=shark.getY();
                 for(var i=0;i<_this.players.length;i++){
                     let item=_this.players[i];
-                    if((item.type=='smallfish')||(item.type=='bigfish')||(item.type=='star')||(item.type=='mine')){
+                    if((item.type=='smallfish')||(item.type=='bigfish')||(item.type=='star')||(item.type=='mine')||(item.type=='torpedo')){
                         let w=128;
                         let h=96;
                         var midItemX=(item.size.width/2+item.posX);
@@ -396,7 +430,16 @@
                         if((midItemX>sharkX)&&(midItemX<sharkX+w)&&(midItemY<sharkY+h-10)&&(midItemY>sharkY+10)){
                             switch(item.type){
                                 case 'mine': 
-                                    let bumb=_this.players[_this.players.length-1];
+                                    var bumb=_this.players[_this.players.length-1];
+                                    item.posX=-200;
+                                    _this.setLife(-1);
+                                    shark.dead=true;
+                                    _this.bigBump=true;
+                                    bumb.explode(midItemX,midItemY);
+                                    _this.playBump();
+                                break;
+                                case 'torpedo': 
+                                    var bumb=_this.players[_this.players.length-1];
                                     item.posX=-200;
                                     _this.setLife(-1);
                                     shark.dead=true;
@@ -424,10 +467,39 @@
             }
             this.updateModel=function(){
                 for(var i=0;i<_this.players.length;i++){
-                    let item=_this.players[i];
+                    var item=_this.players[i];
                     if((item.type=='smallfish')||(item.type=='bigfish')){
                          _this.players[i].go();
+                    }else if(item.type==='submarine'){
+                        var torp1=_this.players[i+1];
+                        var torp2=_this.players[i+2];
+                        var torp3=_this.players[i+3];
+                        if((!item.stop)&&(item.posX>item.posXstable)&&(item.before)){
+                            item.go();
+                            torp1.go();
+                            torp2.go();
+                            torp3.go();
+                        }else if(item.before){
+                            item.posX=item.posXstable;
+                            torp1.posX=item.posXstable+60;
+                            torp2.posX=item.posXstable+60;
+                            torp3.posX=item.posXstable+60;
+                            item.stop=true;
+                            item.before=false;
+                        }
+                       if((item.stop)&&(torp1.posX>-70)){
+                                torp1.run();
+                            }else if((item.stop)&&(torp1.posX<0)&&(torp2.posX>-70)){
+                                torp2.run();
+                            }else if((item.stop)&&(torp1.posX<0)&&(torp2.posX<0)&&(torp3.posX>-70)){
+                                torp3.run();
+                            }else if((item.stop)&&(torp1.posX<0)&&(torp2.posX<0)&&(torp3.posX<0)){
+                                _this.players[i].stop=false; 
+                            }else if((_this.players[i+1].posX<0)&&(_this.players[i+1].posX<0)&&(_this.players[i+1].posX<0)){
+                            item.go();
+                        }
                     }
+                   
                 }
                 
             };
@@ -437,11 +509,6 @@
                 _this.check();
                 _this.updateModel();
                 }  
-            
-            
-            
-            
-            
             }
         }
 
@@ -514,28 +581,18 @@
                                 
                             break;
                             case 'submarine':
-                                
+                                let subX=player.getX();
+                                context.drawImage(player.pic, 0, 0, 256,224,subX,player.posY,128,112);
+                            break;
+                            case 'torpedo':
+                                let pos=player.get();
+                                let spriteY=pos.y;
+                                context.drawImage(player.pic, 0, spriteY, 104,48,pos.x,player.posY,52,24);
                             break;
                         }
                     }       
                 }
             };
-        
-            /*
-        
-            this.drawSubmarine=function(){
-                context.drawImage(myModel.submarine.pic, 0, 0, myModel.submarine.size.width*2,myModel.submarine.size.height*2,myModel.submarine.posX,myModel.submarine.posY,myModel.submarine.size.width,myModel.submarine.size.height);
-                if(myModel.torpedo1){
-                    context.drawImage(myModel.torpedo1.pic, 0, 0, myModel.torpedo1.size.width*2,myModel.torpedo1.size.height*2,myModel.torpedo1.posX,myModel.torpedo1.posY,myModel.torpedo1.size.width,myModel.torpedo1.size.height);
-                }
-                if(myModel.submarine.torpedo2){
-                    context.drawImage(myModel.submarine.torpedo2.pic, 0, myModel.submarine.torpedo2.size.height*2, myModel.submarine.torpedo2.size.width*2,myModel.submarine.torpedo2.size.height*2,myModel.submarine.torpedo2.posX,myModel.submarine.torpedo2.posY,myModel.submarine.torpedo2.size.width,myModel.submarine.torpedo2.size.height);  
-                }
-                if(myModel.submarine.torpedo3){
-                    context.drawImage(myModel.submarine.torpedo3.pic, 0, myModel.submarine.torpedo3.size.height*4, myModel.submarine.torpedo3.size.width*2,myModel.submarine.torpedo3.size.height*2,myModel.submarine.torpedo3.posX,myModel.submarine.torpedo3.posY,myModel.submarine.torpedo3.size.width,myModel.submarine.torpedo3.size.height);
-                
-                }
-            }*/
             this.updateCnv=function(){
                 context=cnv.getContext('2d');
                 _this.clearAll();
@@ -554,55 +611,73 @@
                 myField=field;
             };
             this.check=function(){
-                if(myModel.stop){
+
+                var t=myModel.getState();
+
+                if((!t)&&(myModel.players[0].lives==0)){
+                    myModel.stop=true;
                     _this.iLose();
                 }
-                if(myModel.elements.nowScore>300){
+                if(myModel.elements.nowScore>3000){
                     myModel.stop=true;
                     _this.iWin();
                 }
             }
             this.iLose=function(){
-                var divL=document.getElementById('divResult');
+                console.log('controller.lose');
+                var divL=document.getElementById('divResultL');
                 if(divL){
-                    document.body.appendChild(divL);
+                    divL.style.display='block';
                 }else{
-                    var divL=document.createElement('div');
+                    divL=document.createElement('div');
                     divL.setAttribute('id','divResultL');
                     var HScore=localStorage.getItem('highscore');
                     var WinL=[
-                        {which: 'loseGame', current: myModel.elements.nowScore, goOn:'', highscore: HScore, restart: 'restartButton', menu: 'menuButton'}
+                        {which: 'loseGame', current: myModel.elements.nowScore, goOn:'', highscore: HScore, restart: 'restartButtonL', menu: 'menuButton1'}
                     ];
                     $('#gameResultTMPL').tmpl(WinL).appendTo(divL);
                     document.body.appendChild(divL);
                 }
                 bulk();
-                var restartGame=document.getElementById('restartButton');
+                var restartGame=document.getElementById('restartButtonL');
                 restartGame.addEventListener('click',function(e){
-                    document.body.removeChild(divL);
-                    playMyGame();
-                    bulk();
+                        divL.style.display='none';
+                        myModel.players=null;
+                        myModel.players=[];
+                        for(var i=0; i<itemOptions.length; i++) {
+                                let char = itemOptions[i];
+                                myModel.players.push(new Item(char.type, char.src, char.x, char.y, char.speed, char.w, char.h));
+                        }
+                        myModel.bigBump=false;
+                        myModel.stop=false;
+                        bulk();
                 });
-                var goMenu=document.getElementById('menuButton');
+                var goMenu=document.getElementById('menuButton1');
                 goMenu.addEventListener('click',function(e){
                     e.preventDefault();
+                    divL.style.display='none';
                     location.hash = "index";
                     bulk();
+                    var scr1=document.getElementById('script1');
+                    document.body.removeChild(scr1);
+                    var scr2=document.getElementById('script2');
+                    document.body.removeChild(scr2);
                 });
             };
             this.iWin=function(){
-                var divR=document.getElementById('divResult');
+                console.log('controller.win');
+                divR=document.getElementById('divResult');
                 if(divR){
-                    document.body.appendChild(divR);
+                    divR.style.display='block';
                 }else{
-                    var div=document.createElement('div');
-                    div.setAttribute('id','divResult');
+                    divR=document.createElement('div');
+                    divR.setAttribute('id','divResult');
                     var HScore=localStorage.getItem('highscore');
                     var WinA=[
                         {which: 'winGame', current: myModel.elements.nowScore, goOn:'playMore', highscore: HScore, restart: 'restartButton', menu: 'menuButton'}
                     ];
-                    $('#gameResultTMPL').tmpl(WinA).appendTo(div);
-                    document.body.appendChild(div);
+                    $('#gameResultTMPL').tmpl(WinA).appendTo(divR);
+                    document.body.appendChild(divR);
                     if(myModel.elements.nowScore>HScore){
                         localStorage.setItem('highscore', myModel.elements.nowScore);
                         var newS=document.createElement('h5');
@@ -614,20 +689,32 @@
                     bulk();
                     var restartGame=document.getElementById('restartButton');
                     restartGame.addEventListener('click',function(e){
-                        let div1=document.getElementById('divResult');
-                        document.body.removeChild(div1);
-                        playMyGame();
+                        divR.style.display='none';
+                        myModel.players=null;
+                        myModel.elements=null;
+                        myModel.elements=new UserElements();
+                        myModel.players=[];
+                        for(var i=0; i<itemOptions.length; i++) {
+                                let char = itemOptions[i];
+                                myModel.players.push(new Item(char.type, char.src, char.x, char.y, char.speed, char.w, char.h));
+                        }
+                        myModel.bigBump=false;
+                        myModel.stop=false;
                         bulk();
+                        
                     });
                     var goMenu=document.getElementById('menuButton');
                     goMenu.addEventListener('click',function(e){
                         e.preventDefault();
-                        location.hash = "index";
+                        divR.style.display='none';
                         bulk();
+                        location.hash = "index";
+                        
                     });
                     var playMore=document.getElementById('playMore');
                     playMore.addEventListener('click',function(e){
                         alert('No levels available');
+                        divR.style.display='none';
                         location.hash = "index";
                         bulk();
                     });
